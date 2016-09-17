@@ -20,9 +20,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         LOG.debug("forward meal list to mealList.jsp");
         List<MealWithExceed> mealWithExceeds = MealsUtil.getMockList();
         req.setAttribute("list", mealWithExceeds);
-        req.getRequestDispatcher("/meals").forward(req, resp);
+        req.getRequestDispatcher("mealList.jsp").forward(req, resp);
     }
+
 }

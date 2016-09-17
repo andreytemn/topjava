@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://example.com/functions" prefix="f" %>
 <html>
 <head>
     <title>Meal List</title>
@@ -16,7 +17,7 @@
 <table border="1px solid black">
     <c:forEach var="meal" items="${requestScope.list}">
         <%String trClass = "color:green;";%>
-        <c:if test="${meal.isExceeded}">
+        <c:if test="${meal.isExceed()}">
             <%trClass = "color:red;";%>
         </c:if>
         <tr style="<%=trClass%>">
