@@ -21,7 +21,7 @@
             <%trClass = "color:red;";%>
         </c:if>
         <tr style="<%=trClass%>">
-            <td>${meal.getDateTime()}</td><td>${meal.getDescription()}</td><td>${meal.getCalories()}</td>
+            <td>${f:matches(meal.getDateTime(),"yyyy.MM.dd HH:mm:ss")}</td><td>${meal.getDescription()}</td><td>${meal.getCalories()}</td>
         </tr>
     </c:forEach>
 </table>
