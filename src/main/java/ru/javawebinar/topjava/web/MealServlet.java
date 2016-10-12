@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 /**
@@ -32,7 +33,7 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
         mealController = springContext.getBean(MealRestController.class);
     }
 
@@ -65,8 +66,8 @@ public class MealServlet extends HttpServlet {
             LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request));
             LocalTime startTime = TimeUtil.parseLocalTime(resetParam("startTime", request));
             LocalTime endTime = TimeUtil.parseLocalTime(resetParam("endTime", request));
-            request.setAttribute("mealList", mealController.getBetween(startDate, startTime, endDate, endTime));
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
+            request.setAttribute("meals", mealController.getBetween(startDate, startTime, endDate, endTime));
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
 
@@ -81,8 +82,8 @@ public class MealServlet extends HttpServlet {
 
         if (action == null) {
             LOG.info("getAll");
-            request.setAttribute("mealList", mealController.getAll());
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
+            request.setAttribute("meals", mealController.getAll());
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
 
         } else if ("delete".equals(action)) {
             int id = getId(request);
@@ -91,11 +92,11 @@ public class MealServlet extends HttpServlet {
             response.sendRedirect("meals");
 
         } else if ("create".equals(action) || "update".equals(action)) {
-            final Meal meal = action.equals("create") ?
-                    new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
+            final Meal meal = "create".equals(action) ?
+                    new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "", 1000) :
                     mealController.get(getId(request));
             request.setAttribute("meal", meal);
-            request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
+            request.getRequestDispatcher("meal.jsp").forward(request, response);
         }
     }
 
