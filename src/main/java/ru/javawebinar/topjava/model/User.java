@@ -6,8 +6,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.util.MealsUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -64,7 +64,7 @@ public class User extends NamedEntity {
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("dateTime DESC")
-    @JsonIgnore
+//    @JsonIgnore
     protected List<Meal> meals;
 
     public User() {
@@ -84,7 +84,7 @@ public class User extends NamedEntity {
         this.password = password;
         this.caloriesPerDay = caloriesPerDay;
         this.enabled = enabled;
-        this.roles = roles;
+        setRoles(roles);
     }
 
     public String getEmail() {
@@ -128,7 +128,7 @@ public class User extends NamedEntity {
     }
 
     public void setRoles(Collection<Role> roles) {
-        this.roles = EnumSet.copyOf(roles);
+        this.roles = CollectionUtils.isEmpty(roles) ? Collections.emptySet() : EnumSet.copyOf(roles);
     }
 
     public String getPassword() {
